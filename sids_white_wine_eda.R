@@ -6,6 +6,8 @@ summary(white_wine_data$volatile.acidity)
 summary(white_wine_data$citric.acid)
 summary(white_wine_data$residual.sugar)
 summary(white_wine_data$chlorides)
+
+
 summary(white_wine_data$alcohol)
 summary(white_wine_data$quality)
 summary(white_wine_data$pH)
@@ -70,6 +72,15 @@ plot(quality~sulphates, data=white_wine_data)#Straight Line Patterns suggest Log
 #As the quality rating of the wine increases, the median pH seems to increases
 boxplot(sulphates~quality,data=white_wine_data)
 
+boxplot(free.sulfur.dioxide~quality,data=white_wine_data)
+
+plot(quality~free.sulfur.dioxide, data=white_wine_data)
+
+boxplot(total.sulfur.dioxide~quality,data=white_wine_data)
+
+plot(quality~total.sulfur.dioxide, data=white_wine_data)
+
+
 white_wine_fixed_acidity<-white_wine_data %>%
   group_by(quality)%>%
   summarise(mean=mean(fixed.acidity), median=median(fixed.acidity))
@@ -110,4 +121,13 @@ white_wine_sulphates<-white_wine_data %>%
   summarise(mean=mean(sulphates), median=median(sulphates))
 white_wine_sulphates #Seem to be similar, not very clear what relationship is
 
+white_wine_density<-white_wine_data %>%
+  group_by(quality)%>%
+  summarise(mean=mean(density), median=median(density))
+white_wine_density
+
 #Potential predictors: pH, chlorides, and alcohol
+white_wine_alcohol<-white_wine_data %>%
+  group_by(quality)%>%
+  summarise(count=count(quality))
+
