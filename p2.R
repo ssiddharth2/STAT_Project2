@@ -1,6 +1,6 @@
 # Project 2 - Stat 6021
 
-setwd("~/Desktop/Stat 6021/Project 2")
+#setwd("~/Desktop/Stat 6021/Project 2")
 dataW <- read.csv("wineQualityWhites.csv", header=TRUE, sep=",")
 dataR <- read.csv("wineQualityReds.csv", header=TRUE, sep=",")
 
@@ -70,7 +70,6 @@ z
 p <- (1 - pnorm(abs(z)))*2
 p
 
-
 result2 <- multinom(data=train, quality ~ alcohol + density + sulphates + pH + fixed.acidity + 
                      volatile.acidity + citric.acid + residual.sugar + chlorides + free.sulfur.dioxide)
 summary(result2)
@@ -139,7 +138,38 @@ p
 # very tiny, less than 0.05 so we use the reduced model over the full
 
 summary(reduced)
+get_prediction<-function
 
+test_set<-predict(reduced,test,"probs")
+
+get_prediction<-function(row){
+  index=1;
+  max=row[index];
+  for(i in 1:length(row)){
+    if(row[i]>max){
+      index=i;
+      max=row[i];}
+  }
+  result=3
+  if(index == 2){
+    result=4
+  }else if(index==3){
+    result=5
+  }else if(index==4){
+    result=6
+  }else if(index==5){
+    result=7
+  }else if(index==6){
+    result=8
+  }else{
+    result=3
+  }
+  result
+}
+get_prediction(test_set[2,])
+print(test_set[2,])
+
+prediction_results<-apply(test_set,1,get_prediction)
 
 
 
