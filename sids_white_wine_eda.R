@@ -90,5 +90,24 @@ white_wine_residual_sugar<-white_wine_data %>%
   summarise(mean=mean(residual.sugar), median=median(residual.sugar))
 white_wine_residual_sugar #Wines with quality ratings of 5 and 6 seem to have higher residual sugars
 
+white_wine_chlorides<-white_wine_data %>%
+  group_by(quality)%>%
+  summarise(mean=mean(chlorides), median=median(chlorides))
+white_wine_chlorides #Decrease as the quality rating increases
 
+white_wine_pH<-white_wine_data %>%
+  group_by(quality)%>%
+  summarise(mean=mean(pH), median=median(pH))
+white_wine_pH #Average mmean and median increase as the quality rating increases
 
+white_wine_alcohol<-white_wine_data %>%
+  group_by(quality)%>%
+  summarise(mean=mean(alcohol), median=median(alcohol))
+white_wine_alcohol #Average mean and median increase as the quality rating increase
+
+white_wine_sulphates<-white_wine_data %>%
+  group_by(quality)%>%
+  summarise(mean=mean(sulphates), median=median(sulphates))
+white_wine_sulphates #Seem to be similar, not very clear what relationship is
+
+#Potential predictors: pH, chlorides, and alcohol
