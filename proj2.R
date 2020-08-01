@@ -24,7 +24,7 @@ train
 is.factor(dataW$qualR)
 dataW$qualR <- factor(dataW$qualR)
 
-result <- glm(qualR~fixed.acidity+volatile.acidity+citric.acid+residual.sugar+chlorides+free.sulfur.dioxide+total.sulfur.dioxide+density+pH+sulphates+alcohol, family=binomial, data=train)
+result <- glm(qualR~fixed.acidity+volatile.acidity+residual.sugar+chlorides+free.sulfur.dioxide+density+pH+sulphates, family=binomial, data=train)
 summary(result)
 
 library(ROCR)
@@ -34,4 +34,10 @@ roc_result <- performance(rates,measure="tpr", x.measure="fpr")
 plot(roc_result, main="ROC Curve")
 lines(x = c(0,1), y = c(0,1), col="red")
 
+auc <- performance(rates, measure = "auc")
+auc
 
+table(test$qualR, preds>0.5)
+(1789+167)/(1789+167+117+376)
+
+table(test$qualR, preds>0.6)
