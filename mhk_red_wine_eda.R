@@ -18,7 +18,7 @@ library('psych')
 data.white<-read.csv("wineQualityWhites.csv", header = TRUE, sep=',')
 data.white$type <- 'white'
 
-data.red<-read.csv("wineQualityWhites.csv", header = TRUE, sep=',')
+data.red<-read.csv("TwineQualityWhites.csv", header = TRUE, sep=',')
 data.red$type <- 'red'
 data.all <- rbind(data.red, data.white)
 
