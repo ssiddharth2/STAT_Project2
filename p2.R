@@ -3,8 +3,7 @@
 setwd("~/Desktop/Stat 6021/Project 2")
 dataW <- read.csv("wineQualityWhites.csv", header=TRUE, sep=",")
 dataR <- read.csv("wineQualityReds.csv", header=TRUE, sep=",")
-attach(dataW)
-dataW
+
 
 #cor(data)
 #pairs(data, lower.panel=NULL)
@@ -40,9 +39,17 @@ plot(alcohol, density)
 
 library(nnet)
 
-is.numeric(quality)
-quality <- factor(quality)
-levels(quality)
+for (row in 1:nrow(dataW)) {
+  if (dataW[row, "quality"] == 9) {
+    dataW[row, "quality"] <- 8 
+  } 
+}
+
+dataW
+
+is.numeric(dataW$quality)
+dataW$quality <- factor(dataW$quality)
+levels(dataW$quality)
 
 set.seed(199)
 sample <- sample.int(nrow(dataW), floor(.50*nrow(dataW)), replace = F)
@@ -52,7 +59,9 @@ test <- dataW[-sample, ] # takes those that weren't in the sample
 train
 
 
-result <- multinom(quality ~ alcohol + density + sulphates + pH)
+result <- multinom(data=train, quality ~ alcohol + density + sulphates + pH + fixed.acidity + 
+                     volatile.acidity + citric.acid + residual.sugar + chlorides + free.sulfur.dioxide
+                   + total.sulfur.dioxide)
 summary(result)
 
 z <- summary(result)$coefficients/summary(result)$standard.errors
@@ -60,3 +69,77 @@ z
 
 p <- (1 - pnorm(abs(z)))*2
 p
+
+
+result2 <- multinom(data=train, quality ~ alcohol + density + sulphates + pH + fixed.acidity + 
+                     volatile.acidity + citric.acid + residual.sugar + chlorides + free.sulfur.dioxide)
+summary(result2)
+
+z <- summary(result2)$coefficients/summary(result2)$standard.errors
+z
+
+p <- (1 - pnorm(abs(z)))*2
+p
+
+
+result3 <- multinom(data=train, quality ~ alcohol + density + sulphates + fixed.acidity + 
+                      volatile.acidity + citric.acid + residual.sugar + chlorides + free.sulfur.dioxide)
+summary(result3)
+
+z <- summary(result3)$coefficients/summary(result3)$standard.errors
+z
+
+p <- (1 - pnorm(abs(z)))*2
+p
+
+
+result4 <- multinom(data=train, quality ~ alcohol + density + sulphates + fixed.acidity + 
+                      volatile.acidity + residual.sugar + chlorides + free.sulfur.dioxide)
+summary(result4)
+
+z <- summary(result4)$coefficients/summary(result4)$standard.errors
+z
+
+p <- (1 - pnorm(abs(z)))*2
+p
+
+
+result5 <- multinom(data=train, quality ~ alcohol + density + fixed.acidity + 
+                      volatile.acidity + residual.sugar + chlorides + free.sulfur.dioxide)
+summary(result5)
+
+z <- summary(result5)$coefficients/summary(result5)$standard.errors
+z
+
+p <- (1 - pnorm(abs(z)))*2
+p
+
+
+reduced <- multinom(data=train, quality ~ alcohol + density + fixed.acidity + 
+                      volatile.acidity + chlorides + free.sulfur.dioxide)
+summary(reduced)
+
+z <- summary(reduced)$coefficients/summary(reduced)$standard.errors
+z
+
+p <- (1 - pnorm(abs(z)))*2
+p
+
+
+# Use deviance tests:
+
+# full model is stored as result
+
+# Our reduced model vs. intercept-only model:
+1-pchisq(reduced$null.deviance-reduced$deviance,7)
+# equal to zero, reject null and use reduced model over intercept only
+
+# Our reduced model vs. full model
+1-pchisq(reduced$deviance-result$deviance,6)
+# very tiny, less than 0.05 so we use the reduced model over the full
+
+summary(reduced)
+
+
+
+
