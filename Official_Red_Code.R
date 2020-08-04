@@ -15,26 +15,6 @@ for (row in 1:nrow(dataR)) {
   }
 }
 
-#Full model before splitting into test and train
-full <- glm(qualR~alcohol+fixed.acidity+volatile.acidity+citric.acid+residual.sugar+chlorides+free.sulfur.dioxide+total.sulfur.dioxide+density+pH+sulphates, family=binomial, data=dataR)
-summary(full)
-
-# leverages using full model
-lev<-lm.influence(full)$hat 
-sort(lev)
-n <- length(dataR$qualR)
-p <- 11
-2*p/n # 0.0137586
-plot(lev, main="Leverages", ylim=c(-0.1,0.3))
-abline(h=2*p/n, col="red")
-##identify data points of higher value than the critical value
-lev[lev>2*p/n]  # 227 out of 1599 have high leverage
-
-# Using DFFFITs to identify influential observations
-DFFITS<-dffits(full)
-DFFITS[abs(DFFITS)>2*sqrt(p/n)] #238 out of 1599 are influential
-
-
 # Split the data set into equal "train" and "test" groups to validate the model
 RNGkind(sample.kind = "Rejection")
 set.seed(111)
@@ -190,6 +170,10 @@ table(test$qualR, next_preds5>0.55) # reduced FPR by 3, TPR by 4
 # 99.7% of low quality wines are classified correctly
 # Accuracy = 1-Error Rate = 1-((96+2)/(96+2+685+17)) = 0.8775
 # Accuracy = 87.7 % 
+
+# Specificity of the model is already above 0.99, in this case we can consider
+# raising the threshold to make more false negative results instead predict as
+# true positive. This will make for an overall useful model.
 table(test$qualR, next_preds5>0.45)
 # FALSE TRUE
 # 0   673   14
