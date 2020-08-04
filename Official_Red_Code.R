@@ -14,6 +14,27 @@ for (row in 1:nrow(dataR)) {
     dataR[row, "qualR"] <- 0
   }
 }
+
+#Full model before splitting into test and train
+full <- glm(qualR~alcohol+fixed.acidity+volatile.acidity+citric.acid+residual.sugar+chlorides+free.sulfur.dioxide+total.sulfur.dioxide+density+pH+sulphates, family=binomial, data=dataR)
+summary(full)
+
+# leverages using full model
+lev<-lm.influence(full)$hat 
+sort(lev)
+n <- length(dataR$qualR)
+p <- 11
+2*p/n # 0.0137586
+plot(lev, main="Leverages", ylim=c(-0.1,0.3))
+abline(h=2*p/n, col="red")
+##identify data points of higher value than the critical value
+lev[lev>2*p/n]  # 227 out of 1599 have high leverage
+
+# Using DFFFITs to identify influential observations
+DFFITS<-dffits(full)
+DFFITS[abs(DFFITS)>2*sqrt(p/n)] #238 out of 1599 are influential
+
+
 # Split the data set into equal "train" and "test" groups to validate the model
 RNGkind(sample.kind = "Rejection")
 set.seed(111)
@@ -171,8 +192,8 @@ table(test$qualR, next_preds5>0.55) # reduced FPR by 3, TPR by 4
 # Accuracy = 87.7 % 
 
 
-# Going back to exploratory data analysis
-# These last models still were not better than the previous
+# Revisiting the exploratory data analysis
+# These last models still were not better than the previous best: new_result5
 next_result6 <- glm(qualR~alcohol+volatile.acidity+citric.acid+residual.sugar+sulphates, family=binomial, data=train)
 summary(next_result6) 
 next_preds6 <- predict(next_result6,newdata=test, type="response") # give estimated probability for testing set
@@ -208,3 +229,7 @@ lines(x = c(0,1), y = c(0,1), col="red")
 the_auc9 <- performance(next_rates8, measure = "auc")
 the_auc9@y.values
 table(test$qualR, next_preds7>0.55)
+
+
+
+
