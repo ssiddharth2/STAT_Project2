@@ -15,6 +15,7 @@ for (row in 1:nrow(dataR)) {
   }
 }
 # Split the data set into equal "train" and "test" groups to validate the model
+RNGkind(sample.kind = "Rejection")
 set.seed(111)
 
 sample <- sample.int(nrow(dataR), floor(.50*nrow(dataR)), replace = F)
@@ -168,3 +169,42 @@ table(test$qualR, next_preds5>0.55) # reduced FPR by 3, TPR by 4
 # 99.7% of low quality wines are classified correctly
 # Accuracy = 1-Error Rate = 1-((96+2)/(96+2+685+17)) = 0.8775
 # Accuracy = 87.7 % 
+
+
+# Going back to exploratory data analysis
+# These last models still were not better than the previous
+next_result6 <- glm(qualR~alcohol+volatile.acidity+citric.acid+residual.sugar+sulphates, family=binomial, data=train)
+summary(next_result6) 
+next_preds6 <- predict(next_result6,newdata=test, type="response") # give estimated probability for testing set
+next_rates6 <- prediction(next_preds6, test$qualR)
+roc_result <- performance(next_rates6,measure="tpr", x.measure="fpr")
+plot(roc_result, main="New Reduced Red ROC")
+lines(x = c(0,1), y = c(0,1), col="red")
+
+the_auc7 <- performance(next_rates6, measure = "auc")
+the_auc7@y.values # 0.88645
+table(test$qualR, next_preds6>0.55)
+
+next_result7 <- glm(qualR~alcohol+volatile.acidity+citric.acid+sulphates, family=binomial, data=train)
+summary(next_result7) 
+next_preds7 <- predict(next_result7,newdata=test, type="response") # give estimated probability for testing set
+next_rates7 <- prediction(next_preds7, test$qualR)
+roc_result <- performance(next_rates7,measure="tpr", x.measure="fpr")
+plot(roc_result, main="New Reduced Red ROC")
+lines(x = c(0,1), y = c(0,1), col="red")
+
+the_auc8 <- performance(next_rates7, measure = "auc")
+the_auc8@y.values 
+table(test$qualR, next_preds7>0.55)
+
+next_result8 <- glm(qualR~alcohol+volatile.acidity+sulphates, family=binomial, data=train)
+summary(next_result8) 
+next_preds8 <- predict(next_result8,newdata=test, type="response") # give estimated probability for testing set
+next_rates8 <- prediction(next_preds8, test$qualR)
+roc_result <- performance(next_rates8,measure="tpr", x.measure="fpr")
+plot(roc_result, main="New Reduced Red ROC")
+lines(x = c(0,1), y = c(0,1), col="red")
+
+the_auc9 <- performance(next_rates8, measure = "auc")
+the_auc9@y.values
+table(test$qualR, next_preds7>0.55)
