@@ -190,6 +190,18 @@ table(test$qualR, next_preds5>0.55) # reduced FPR by 3, TPR by 4
 # 99.7% of low quality wines are classified correctly
 # Accuracy = 1-Error Rate = 1-((96+2)/(96+2+685+17)) = 0.8775
 # Accuracy = 87.7 % 
+table(test$qualR, next_preds5>0.45)
+# FALSE TRUE
+# 0   673   14
+# 1    85   28
+# Sensitivity = 1-FNR = TP/(FN+TP)
+# Sensitivity = 28/(28+85) = 0.2477876
+# 24.8% of high quality wines are classified correctly
+# Specificity = 1-FPR = TN/(TN+FP)
+# Specificity = # 673/(673+14) = 0.979621 ** this is most important for our customer
+# 98.0% of low quality wines are classified correctly
+# Accuracy = 1-Error Rate = 1-(85+14)/(673+14+28+85) = 0.87625
+# Accuracy = 87.6 % 
 
 
 # Revisiting the exploratory data analysis
