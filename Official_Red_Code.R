@@ -132,7 +132,9 @@ the_auc5@y.values #0.8839768
 
 
 table(test$qualR, next_preds4>0.45)
-
+# FALSE TRUE
+# 0   671   16
+# 1    88   25
 
 table(test$qualR, next_preds4>0.50)
 #    FALSE TRUE
@@ -191,6 +193,8 @@ the_auc6@y.values
 
 
 table(test$qualR, next_preds6>0.5)
+
+
 #With density removed
 next_result7 <- glm(qualR~alcohol+volatile.acidity+residual.sugar+sulphates, family=binomial, data=train)
 1-pchisq(next_result7$deviance-next_result6$deviance,1) 
@@ -202,7 +206,7 @@ roc_result <- performance(next_rates7,measure="tpr", x.measure="fpr")
 plot(roc_result, main=" Red Wine ROC for EDA with Residual Sugars")
 lines(x = c(0,1), y = c(0,1), col="red")
 
-the_auc7 <- performance(next_rates5, measure = "auc")
+the_auc7 <- performance(next_rates7, measure = "auc")
 the_auc7@y.values # 0.884051
 
 # Confusion Matrix to validate the model and compare versus Approach 1  and above
@@ -243,4 +247,37 @@ table(test$qualR, next_preds7>0.45)
 # Accuracy = 1-Error Rate = 1-((85+14)/(28+85+673+14) = 0.85875
 # Accuracy = 85.875 % 
 
+next_result8 <- glm(qualR~alcohol+volatile.acidity+sulphates, family=binomial, data=train)
+1-pchisq(next_result8$deviance-next_result7$deviance,1) 
+summary(next_result8) 
 
+next_preds8 <- predict(next_result8,newdata=test, type="response") # give estimated probability for testing set
+next_rates8 <- prediction(next_preds8, test$qualR)
+roc_result <- performance(next_rates8,measure="tpr", x.measure="fpr")
+plot(roc_result, main=" Red Wine ROC for EDA with Residual Sugars")
+lines(x = c(0,1), y = c(0,1), col="red")
+
+the_auc8 <- performance(next_rates8, measure = "auc")
+the_auc8@y.values # 0.884051
+
+# Confusion Matrix to validate the model and compare versus Approach 1  and above
+table(test$qualR, next_preds8>0.5)
+# FALSE TRUE
+# 0   682    5
+# 1    94   19
+table(test$qualR, next_preds8>0.55)
+# FALSE TRUE
+# 0   685    2
+# 1    97   16
+table(test$qualR, next_preds8>0.45)
+# FALSE TRUE
+# 0   676   11
+# 1    83   30
+# Sensitivity = 1-FNR = TP/(FN+TP)
+# Sensitivity = 30/(83+30) = 0.2654867
+# 26.5% of high quality wines are classified correctly
+# Specificity = 1-FPR = TN/(TN+FP)
+# Specificity = 676/(676+11) = 0.9839884
+# 98.4% of low quality wines are classified correctly
+# Accuracy = 1-Error Rate = ((83+11)/(83+11+676+30) = 0.8825
+# Accuracy = 88.25 % 
