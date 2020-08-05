@@ -54,8 +54,8 @@ table(test$qualR, full_preds>0.5)
 #    FALSE TRUE
 #0   672   15
 #1    76   37
-#Precision: 35/(35+17)=0.673
-#Specificity= 672/(672+15)=0.978
+#Precision: 37/(37+15)=0.7115385
+#Specificity= 672/(672+15)=0.9781659
 #Sensitivity= 37/(37+76)=0.327
 #Accuracy=(672+37)/(672+15+76+37)=0.88625
 
@@ -79,10 +79,10 @@ table(test$qualR, red_preds>0.5)
 #    FALSE TRUE
 #0   672   15
 #1    77   36
-#Precision: 36/(36+15)=0.7058
-#Specificity= 672/(672+15)=0.978
-#Sensitivity= 37/(37+76)=0.3186
-#Accuracy=(672+37)/(672+15+77+36)=0.885
+#Precision: 36/(36+15)=0.7058824
+#Specificity= 672/(672+15)=0.9781659
+#Sensitivity= 36/(36+77)=0.3185841
+#Accuracy=(672+36)/(672+15+77+36)=0.885
 
 # Removing Free sulfur dioxide
 next_result <- glm(qualR~alcohol+fixed.acidity+volatile.acidity+citric.acid+residual.sugar+chlorides+density+total.sulfur.dioxide+sulphates, family=binomial, data=train)
@@ -103,10 +103,10 @@ table(test$qualR, next_preds>0.5)
 #    FALSE TRUE
 #0   672   15
 #1    77   36
-#Precision: 36/(36+15)=0.7058
-#Specificity= 672/(672+15)=0.978
-#Sensitivity= 37/(37+76)=0.3186
-#Accuracy=(672+37)/(672+15+77+36)=0.885
+#Precision: 36/(36+15)=0.7058824
+#Specificity= 672/(672+17)=0.9753266
+#Sensitivity= 36/(36+77)=0.3185841
+#Accuracy=(672+36)/(672+15+77+36)=0.885
 
 # Removed citric acid
 next_result2 <- glm(qualR~alcohol+fixed.acidity+volatile.acidity+residual.sugar+chlorides+density+total.sulfur.dioxide+sulphates, family=binomial, data=train)
@@ -127,8 +127,8 @@ table(test$qualR, next_preds2>0.5)
 #0   673   14
 #1    77   36
 #Precision: 36/(36+14)=0.720
-#Specificity= 673/(673+14)=0.9796
-#Sensitivity= 36/(36+77)=0.3186
+#Specificity= 673/(673+14)=0.9796215
+#Sensitivity= 36/(36+77)=0.3185841
 #Accuracy=(673+36)/(673+14+77+36)=0.88625
 
 # Removed density
@@ -151,6 +151,10 @@ table(test$qualR, next_preds3>0.45)
 #     FALSE TRUE
 #0   662   25
 #1    75   38
+#Precision: 38/(38+25)=0.6031746
+#Specificity= 662/(662+25)=0.9636099
+#Sensitivity= 38/(38+75)=0.3362832
+#Accuracy=(38+662)/(662+25+75+38)=0.875
 
 # Optimizing threshold to minimize false positive results (FPR) while still maintaining usefulness
 table(test$qualR, next_preds3>0.50)
@@ -158,11 +162,20 @@ table(test$qualR, next_preds3>0.50)
 #    FALSE TRUE
 #  0   669   18
 #  1    79   34
+#Precision: 34/(34+18)=0.6538462
+#Specificity= 669/(669+18)=0.9737991
+#Sensitivity= 34/(34+79)=0.300885
+#Accuracy=(34+669)/(669+18+79+34)=0.87875
 
 table(test$qualR, next_preds3>0.55) 
 #   FALSE TRUE
 #0   678    9
 #1    87   26
+#Precision: 26/(26+9)=0.7428571
+#Specificity= 678/(678+9)=0.9868996
+#Sensitivity= 26/(26+87)=0.2300885
+#Accuracy=(26+678)/(678+9+87+26)=0.88
+
 
 ###
 ### Approach 2 - start with observations from Exploratory Data Analysis
@@ -188,12 +201,11 @@ table(test$qualR, next_preds4>0.50)
 #1    91   22
 # Sensitivity = 1-FNR = TP/(FN+TP)
 # Sensitivity = 22/(22+91) = 0.1946
-# 18.6% of high quality wines are classified correctly
 # Specificity = 1-FPR = TN/(TN+FP)
 # Specificity = # 678/(678+9) = 0.9869
-# 98.69% of low quality wines are classified correctly
 # Accuracy = 1-Error Rate = 1-((91+9)/(91+9+678+22)) = 0.875
 # Accuracy = 87.5 % 
+# Precision = 22/(9+22) = 0.7096774
 
 # Remove density due to insignificant p-value and high standard error
 
@@ -217,13 +229,11 @@ table(test$qualR, next_preds5>0.5)
 # 1    90   23
 # Sensitivity = 1-FNR = TP/(FN+TP)
 # Sensitivity = 23/(23+90) = 0.2035
-# 20.35% of high quality wines are classified correctly
 # Specificity = 1-FPR = TN/(TN+FP)
 # Specificity = # 679/(679+8) = 0.9884
-# 98.84% of low quality wines are classified correctly
 # Accuracy = 1-Error Rate = 1-((90+8)/(90+8+679+23)) = 0.8775
 # Accuracy = 87.75 % 
-
+# Precision 23/(23+8) = 0.7419355
 
 #MODEL with Residual Sugars
 next_result6 <- glm(qualR~alcohol+volatile.acidity+residual.sugar+density+sulphates, family=binomial, data=train)
@@ -241,6 +251,15 @@ the_auc6@y.values
 
 
 table(test$qualR, next_preds6>0.5)
+# FALSE TRUE
+# 0   680    7
+# 1    91   22
+# Sensitivity = 22/(22+91) = 0.1946903
+# Specificity = # 680/(680+7) = 0.9898108
+# Accuracy = 1-Error Rate = 1-((91+7)/(91+7+680+22)) = 0.8775
+# Precision 22/(22+7) = 0.7586207
+
+
 #With density removed
 next_result7 <- glm(qualR~alcohol+volatile.acidity+residual.sugar+sulphates, family=binomial, data=train)
 1-pchisq(next_result7$deviance-next_result6$deviance,1) 
@@ -263,36 +282,31 @@ table(test$qualR, next_preds7>0.5)
 # 1    92   21
 # Sensitivity = 1-FNR = TP/(FN+TP)
 # Sensitivity = 21/(21+92) = 0.1858407
-# 18.6% of high quality wines are classified correctly
 # Specificity = 1-FPR = TN/(TN+FP)
 # Specificity = # 682/(682+5) = 0.992722
-# 99.3% of low quality wines are classified correctly
 # Accuracy = 1-Error Rate = 1-((92+5)/(92+5+682+21)) = 0.87875
 # Accuracy = 87.9 % 
+# Precision = 21/(21+5) = 0.8076923
 table(test$qualR, next_preds7>0.55)
 #   FALSE TRUE
 #0   685   2
 #1    96   17
 # Sensitivity = 1-FNR = TP/(FN+TP)
 # Sensitivity = 17/(17+96) = 0.1504
-# 18.6% of high quality wines are classified correctly
 # Specificity = 1-FPR = TN/(TN+FP)
 # Specificity = # 685/(685+2) = 0.997
-# 99.7% of low quality wines are classified correctly
 # Accuracy = 1-Error Rate = 1-((92+5)/(92+5+682+21)) = 0.8775
-# Accuracy = 87.625 
 table(test$qualR, next_preds7>0.45)
 #   FALSE TRUE
 #0   673   14
 #1    85   28
 # Sensitivity = 1-FNR = TP/(FN+TP)
 # Sensitivity = 28/(28+85) = 0.2477
-# 18.6% of high quality wines are classified correctly
 # Specificity = 1-FPR = TN/(TN+FP)
 # Specificity = # 673/(673+14) = 0.9796
-# 97.96% of low quality wines are classified correctly
 # Accuracy = 1-Error Rate = 1-((85+14)/(28+85+673+14) = 0.87625
-# Accuracy = 85.875 % 
+
+# Dropping residual sugar
 
 next_result8 <- glm(qualR~alcohol+volatile.acidity+sulphates, family=binomial, data=train)
 1-pchisq(next_result8$deviance-next_result7$deviance,1) 
@@ -312,6 +326,11 @@ table(test$qualR, next_preds8>0.5)
 # FALSE TRUE
 # 0   682    5
 # 1    94   19
+
+# Sensitivity = 19/(19+94) = 0.1681416
+# Specificity = # 682/(682+5) = [1] 0.992722
+# Accuracy = 1-Error Rate = 1-((94+5)/(94+5+682+19)) = 0.87625
+# Precision = 19/(19+5) = 0.7916667
 table(test$qualR, next_preds8>0.55)
 # FALSE TRUE
 # 0   685    2
@@ -320,11 +339,8 @@ table(test$qualR, next_preds8>0.45)
 # FALSE TRUE
 # 0   676   11
 # 1    83   30
-# Sensitivity = 1-FNR = TP/(FN+TP)
+
 # Sensitivity = 30/(83+30) = 0.2654867
-# 26.5% of high quality wines are classified correctly
-# Specificity = 1-FPR = TN/(TN+FP)
 # Specificity = 676/(676+11) = 0.9839884
-# 98.4% of low quality wines are classified correctly
 # Accuracy = 1-Error Rate = ((83+11)/(83+11+676+30) = 0.8825
-# Accuracy = 88.25 % 
+# Precision = 30/(30+11) = 0.7317073
