@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ### Red Wine Detailed Analysis
 
 library(ROCR)
@@ -15,12 +14,6 @@ for (row in 1:nrow(dataR)) {
     dataR[row, "qualR"] <- 0
   }
 }
-
-#Full model before splitting into test and train
-full <- glm(qualR~alcohol+fixed.acidity+volatile.acidity+citric.acid+residual.sugar+chlorides+free.sulfur.dioxide+total.sulfur.dioxide+density+pH+sulphates, family=binomial, data=dataR)
-summary(full)
-
-
 # Split the data set into equal "train" and "test" groups to validate the model
 RNGkind(sample.kind = "Rejection")
 set.seed(111)
@@ -50,12 +43,12 @@ lines(x = c(0,1), y = c(0,1), col="red")
 the_auc1 <- performance(full_rates, measure = "auc")
 the_auc1@y.values
 
-# Removed pH
+# Removing pH changed from both fixed acidity and pH
 red_result <- glm(qualR~alcohol+fixed.acidity+volatile.acidity+citric.acid+residual.sugar+chlorides+density+free.sulfur.dioxide+total.sulfur.dioxide+sulphates, family=binomial, data=train)
 #red_result <- glm(qualR~alcohol+fixed.acidity+volatile.acidity+citric.acid+residual.sugar+chlorides+density+free.sulfur.dioxide+total.sulfur.dioxide+sulphates, family=binomial, data=train)
 1-pchisq(red_result$deviance-full_result$deviance,1) #p-value of .95
 
-summary(red_result)
+summary(red_result) 
 
 red_preds <- predict(red_result,newdata=test, type="response") # give estimated probability for testing set
 red_rates <- prediction(red_preds, test$qualR)
@@ -66,7 +59,7 @@ lines(x = c(0,1), y = c(0,1), col="red")
 the_auc2 <- performance(red_rates, measure = "auc")
 the_auc2@y.values
 
-# Removing Free sulfur dioxide
+# Removing Free sulfur dioxide 
 next_result <- glm(qualR~alcohol+fixed.acidity+volatile.acidity+citric.acid+residual.sugar+chlorides+density+total.sulfur.dioxide+sulphates, family=binomial, data=train)
 1-pchisq(next_result$deviance-red_result$deviance,1)
 
@@ -112,22 +105,13 @@ the_auc4 <- performance(next_rates3, measure = "auc")
 the_auc4@y.values
 
 # Confusion Matrix to validate the model
-table(test$qualR, next_preds3>0.45)
-#     FALSE TRUE
-#0   662   25
-#1    75   38
 
 # Optimizing threshold to minimize false positive results (FPR) while still maintaining usefulness
 table(test$qualR, next_preds3>0.50)
-   
-#    FALSE TRUE
-#  0   669   18
-#  1    79   34
+#     FALSE TRUE
+# 0   669    18
+# 1    79    34
 
-table(test$qualR, next_preds3>0.55) 
-#   FALSE TRUE
-#0   678    9
-#1    87   26
 
 ###
 ### Approach 2 - start with observations from Exploratory Data Analysis
@@ -145,6 +129,9 @@ lines(x = c(0,1), y = c(0,1), col="red")
 
 the_auc5 <- performance(next_rates4, measure = "auc")
 the_auc5@y.values #0.8839768
+
+
+table(test$qualR, next_preds4>0.45)
 
 
 table(test$qualR, next_preds4>0.50)
@@ -189,8 +176,6 @@ table(test$qualR, next_preds5>0.5)
 # Accuracy = 1-Error Rate = 1-((90+8)/(90+8+679+23)) = 0.8775
 # Accuracy = 87.75 % 
 
-
-#MODEL with Residual Sugars
 next_result6 <- glm(qualR~alcohol+volatile.acidity+residual.sugar+density+sulphates, family=binomial, data=train)
 1-pchisq(next_result6$null.deviance-next_result6$deviance,5) # Result of 0 means the model is useful
 summary(next_result6) # Remove density due to insignificant p-value and high standard error
@@ -257,8 +242,5 @@ table(test$qualR, next_preds7>0.45)
 # 97.96% of low quality wines are classified correctly
 # Accuracy = 1-Error Rate = 1-((85+14)/(28+85+673+14) = 0.85875
 # Accuracy = 85.875 % 
-
-next_result8 <- glm(qualR~alcohol+volatile.acidity+sulphates, family=binomial, data=train)
-1-pchisq(next_result8$deviance-next_result7$deviance,1) 
 
 
