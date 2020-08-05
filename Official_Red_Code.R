@@ -306,6 +306,25 @@ lines(x = c(0,1), y = c(0,1), col="red")
 
 the_auc8 <- performance(next_rates8, measure = "auc")
 the_auc8@y.values # 0.884051
+
+# Confusion Matrix to validate the model and compare versus Approach 1  and above
 table(test$qualR, next_preds8>0.5)
-table(test$qualR, next_preds8>0.45)
+# FALSE TRUE
+# 0   682    5
+# 1    94   19
 table(test$qualR, next_preds8>0.55)
+# FALSE TRUE
+# 0   685    2
+# 1    97   16
+table(test$qualR, next_preds8>0.45)
+# FALSE TRUE
+# 0   676   11
+# 1    83   30
+# Sensitivity = 1-FNR = TP/(FN+TP)
+# Sensitivity = 30/(83+30) = 0.2654867
+# 26.5% of high quality wines are classified correctly
+# Specificity = 1-FPR = TN/(TN+FP)
+# Specificity = 676/(676+11) = 0.9839884
+# 98.4% of low quality wines are classified correctly
+# Accuracy = 1-Error Rate = ((83+11)/(83+11+676+30) = 0.8825
+# Accuracy = 88.25 % 
