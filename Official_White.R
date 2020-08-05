@@ -16,24 +16,6 @@ for (row in 1:nrow(dataW)) {
     dataW[row, "qualR"] <- 0
   }
 }
-#Full model before splitting into test and train
-fullW <- glm(qualR~alcohol+fixed.acidity+volatile.acidity+citric.acid+residual.sugar+chlorides+free.sulfur.dioxide+total.sulfur.dioxide+density+pH+sulphates, family=binomial, data=dataW)
-summary(fullW)
-
-# leverages using full model
-lev<-lm.influence(fullW)$hat 
-sort(lev)
-n <- length(dataW$qualR)
-p <- 11
-2*p/n # 0.004491629
-plot(lev, main="Leverages", ylim=c(-0.1,0.3))
-abline(h=2*p/n, col="red")
-##identify data points of higher value than the critical value
-lev[lev>2*p/n]  # 481 of 4898 have high leverage
-
-# Using DFFFITs to identify influential observations
-DFFITS<-dffits(fullW)
-DFFITS[abs(DFFITS)>2*sqrt(p/n)] #354 out of 4898 are influential
 
 dataW
 
