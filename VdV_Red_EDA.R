@@ -1,6 +1,10 @@
-### Portuguese Wine Analysis
-### Team "Vinho da C'Ville"
-### Michael Kolonay, Jordan Machida, Stephen Morris, Siddharth Surapaneni
+### Vino da 'Ville
+### Michael Kolonay (mhk9c)
+### Jordan Machita (jm8ux)
+### Stephen Morris (sam3ce)
+### Siddharth Surapeneni (sss2e)
+
+### Red Wine Exploratory Data Analysis
 
 library(MASS)
 library(RColorBrewer)

@@ -1,4 +1,11 @@
-# Project 2
+### Vino da 'Ville
+### Michael Kolonay (mhk9c)
+### Jordan Machita (jm8ux)
+### Stephen Morris (sam3ce)
+### Siddharth Surapeneni (sss2e)
+
+### White Wine Detailed Analysis
+
 library(ggplot2)
 library(ROCR)
 library(tidyverse)  

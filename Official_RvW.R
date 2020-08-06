@@ -1,4 +1,10 @@
-# Project 2 - Stat 6021
+### Vino da 'Ville
+### Michael Kolonay (mhk9c)
+### Jordan Machita (jm8ux)
+### Stephen Morris (sam3ce)
+### Siddharth Surapeneni (sss2e)
+
+### Red vs White Wine Analysis
 
 setwd("~/Desktop/Stat 6021/Project 2")
 dataW <- read.csv("wineQualityWhites.csv", header=TRUE, sep=",")
